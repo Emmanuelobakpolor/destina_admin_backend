@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-4je_*^e8geokjq8#)(503
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['destina-admin-backend.onrender.com']
+ALLOWED_HOSTS = ['destina-adminback.onrender.com']
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
@@ -52,7 +52,7 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'users.User'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://destina-admin-backend.onrender.com',
+    'destina-adminback.onrender.com',
 ]
 
 # Application definition
