@@ -52,7 +52,8 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'users.User'
 
 CSRF_TRUSTED_ORIGINS = [
-    'destina-adminback.onrender.com',
+    'https://destina-adminback.onrender.com',
+    'https://destina-admin-backend.onrender.com',
 ]
 
 # Application definition
