@@ -35,9 +35,9 @@ class RegisterAdminView(APIView):
         if serializer.is_valid():
             user = serializer.save()
             # optionally make staff/superuser flags
-            user.is_staff = True
-            user.save()
-            return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+            user.is_staff = True # Set staff status before the first save
+            user.save(update_fields=['is_staff'])
+            return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED) # Return the serialized user
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginJWTView(APIView):
