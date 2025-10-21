@@ -2,7 +2,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
-from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
+from .serializers import DriverSerializer, RegisterSerializer, LoginSerializer, UserSerializer
 from .models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import login, logout
@@ -83,15 +83,11 @@ class DriverListCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        if request.user.role != 'admin':
-            return Response({"detail":"Forbidden - admin only"}, status=status.HTTP_403_FORBIDDEN)
         drivers = User.objects.filter(role='driver')
         serializer = DriverSerializer(drivers, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        if request.user.role != 'admin':
-            return Response({"detail":"Forbidden - admin only"}, status=status.HTTP_403_FORBIDDEN)
         serializer = DriverSerializer(data=request.data)
         if serializer.is_valid():
             driver = serializer.save()
@@ -102,8 +98,6 @@ class DriverDetailView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, pk):
-        if request.user.role != 'admin':
-            return Response({"detail":"Forbidden - admin only"}, status=status.HTTP_403_FORBIDDEN)
         try:
             driver = User.objects.get(pk=pk, role='driver')
             serializer = DriverSerializer(driver)
@@ -112,8 +106,6 @@ class DriverDetailView(APIView):
             return Response({"detail":"Driver not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, pk):
-        if request.user.role != 'admin':
-            return Response({"detail":"Forbidden - admin only"}, status=status.HTTP_403_FORBIDDEN)
         try:
             driver = User.objects.get(pk=pk, role='driver')
             serializer = DriverSerializer(driver, data=request.data, partial=True)
@@ -125,8 +117,6 @@ class DriverDetailView(APIView):
             return Response({"detail":"Driver not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request, pk):
-        if request.user.role != 'admin':
-            return Response({"detail":"Forbidden - admin only"}, status=status.HTTP_403_FORBIDDEN)
         try:
             driver = User.objects.get(pk=pk, role='driver')
             driver.delete()
