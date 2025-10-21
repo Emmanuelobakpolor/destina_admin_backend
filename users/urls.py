@@ -3,7 +3,7 @@ from django.urls import path
 from .views import (
     RegisterUserView, RegisterAdminView,
     LoginJWTView, LoginSessionView, LogoutSessionView,
-    AdminOnlyView, UserView
+    AdminOnlyView, UserView, DriverListCreateView, DriverDetailView
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -17,4 +17,8 @@ urlpatterns = [
 
     path('admin-only/', AdminOnlyView.as_view(), name='admin-only'),
     path('me/', UserView.as_view(), name='me'),
+
+    # Driver endpoints
+    path('drivers/', DriverListCreateView.as_view(), name='driver-list-create'),
+    path('drivers/<int:pk>/', DriverDetailView.as_view(), name='driver-detail'),
 ]

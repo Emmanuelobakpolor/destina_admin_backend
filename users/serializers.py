@@ -30,3 +30,24 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'role')
+
+class DriverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id', 'email', 'role', 'name', 'phone_number', 'location',
+            'driver_license_front', 'driver_license_back', 'national_id', 'driver_photo',
+            'monday_opening_time', 'monday_closing_time',
+            'tuesday_opening_time', 'tuesday_closing_time',
+            'wednesday_opening_time', 'wednesday_closing_time',
+            'thursday_opening_time', 'thursday_closing_time',
+            'friday_opening_time', 'friday_closing_time',
+            'saturday_opening_time', 'saturday_closing_time',
+            'sunday_opening_time', 'sunday_closing_time',
+            'created_at', 'updated_at'
+        )
+        read_only_fields = ('id', 'created_at', 'updated_at')
+
+    def create(self, validated_data):
+        validated_data['role'] = 'driver'
+        return super().create(validated_data)

@@ -1,10 +1,11 @@
-# users/models.py
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils import timezone
 
 ROLE_CHOICES = (
     ('admin', 'Admin'),
     ('user', 'User'),
+    ('driver', 'Driver'),
 )
 
 class UserManager(BaseUserManager):
@@ -28,6 +29,31 @@ class User(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)  # required for admin site
+
+    # Driver-specific fields
+    name = models.CharField(max_length=255, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
+    driver_license_front = models.ImageField(upload_to='licenses/', blank=True, null=True)
+    driver_license_back = models.ImageField(upload_to='licenses/', blank=True, null=True)
+    national_id = models.ImageField(upload_to='national_ids/', blank=True, null=True)
+    driver_photo = models.ImageField(upload_to='driver_photos/', blank=True, null=True)
+    monday_opening_time = models.TimeField(blank=True, null=True)
+    monday_closing_time = models.TimeField(blank=True, null=True)
+    tuesday_opening_time = models.TimeField(blank=True, null=True)
+    tuesday_closing_time = models.TimeField(blank=True, null=True)
+    wednesday_opening_time = models.TimeField(blank=True, null=True)
+    wednesday_closing_time = models.TimeField(blank=True, null=True)
+    thursday_opening_time = models.TimeField(blank=True, null=True)
+    thursday_closing_time = models.TimeField(blank=True, null=True)
+    friday_opening_time = models.TimeField(blank=True, null=True)
+    friday_closing_time = models.TimeField(blank=True, null=True)
+    saturday_opening_time = models.TimeField(blank=True, null=True)
+    saturday_closing_time = models.TimeField(blank=True, null=True)
+    sunday_opening_time = models.TimeField(blank=True, null=True)
+    sunday_closing_time = models.TimeField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

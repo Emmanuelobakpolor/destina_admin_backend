@@ -77,3 +77,59 @@ class UserView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request):
         return Response({"detail":"Hello User", "user": UserSerializer(request.user).data})
+
+# Driver CRUD views
+class DriverListCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        if request.user.role != 'admin':
+            return Response({"detail":"Forbidden - admin only"}, status=status.HTTP_403_FORBIDDEN)
+        drivers = User.objects.filter(role='driver')
+        serializer = DriverSerializer(drivers, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        if request.user.role != 'admin':
+            return Response({"detail":"Forbidden - admin only"}, status=status.HTTP_403_FORBIDDEN)
+        serializer = DriverSerializer(data=request.data)
+        if serializer.is_valid():
+            driver = serializer.save()
+            return Response(DriverSerializer(driver).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DriverDetailView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, pk):
+        if request.user.role != 'admin':
+            return Response({"detail":"Forbidden - admin only"}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            driver = User.objects.get(pk=pk, role='driver')
+            serializer = DriverSerializer(driver)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response({"detail":"Driver not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, pk):
+        if request.user.role != 'admin':
+            return Response({"detail":"Forbidden - admin only"}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            driver = User.objects.get(pk=pk, role='driver')
+            serializer = DriverSerializer(driver, data=request.data, partial=True)
+            if serializer.is_valid():
+                driver = serializer.save()
+                return Response(DriverSerializer(driver).data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except User.DoesNotExist:
+            return Response({"detail":"Driver not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        if request.user.role != 'admin':
+            return Response({"detail":"Forbidden - admin only"}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            driver = User.objects.get(pk=pk, role='driver')
+            driver.delete()
+            return Response({"detail":"Driver deleted"}, status=status.HTTP_204_NO_CONTENT)
+        except User.DoesNotExist:
+            return Response({"detail":"Driver not found"}, status=status.HTTP_404_NOT_FOUND)
